@@ -31,16 +31,24 @@ public class SecurityConfiguration {
 
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/auth/login",
-            "/api/usuario/listar",
-            "/api/reuniao",
             "/api/pauta",
-            "/api/membros-participantes",
+    };
+
+    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
+            "/api/reuniao/{id}",
+            "/api/usuario/listar",
+            "/api/usuario/{idUsuario}",
             "/api/reuniao/listar",
-            "/api/reuniao/detalhes/{id}",
+            "/api/reuniao/detalhes/{id}"
     };
 
     public static final String [] ENDPOINT_GERENTE = {
-            "/api/usuario"
+            "/api/usuario",
+            "/api/reuniao/adicionar-ata/{id}",
+            "/api/reuniao",
+            "/api/reuniao/{id}",
+            "/api/membros-participantes",
+            "/api/reuniao/marcar-presenca/{id}"
     };
 
     @Bean
@@ -50,6 +58,7 @@ public class SecurityConfiguration {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
+                        .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
                         .requestMatchers(ENDPOINT_GERENTE).hasRole("GERENTE")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 )
@@ -62,7 +71,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "htpp://127.0.0.1:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*")); // Permite todos os cabeçalhos
         configuration.setAllowCredentials(true); // Permite o envio de credenciais
         configuration.addExposedHeader("Authorization");

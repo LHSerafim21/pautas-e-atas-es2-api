@@ -1,6 +1,7 @@
 package com.es2.pautas_e_atas.config;
 
 
+import com.es2.pautas_e_atas.domain.Usuario.Usuario;
 import com.es2.pautas_e_atas.repositories.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
